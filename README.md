@@ -1,7 +1,8 @@
 OM
 
 Funcions:
-    BLS, WolfeC funcionen juntes, busquen la llargada del pas
+
+BLS, WolfeC funcionen juntes, busquen la llargada del pas
         
         - BLS busca la llargada
         
