@@ -16,9 +16,10 @@ Output:
     - x: Punt que fa 0 df.
     - it: nombre d'iteracions usades
 %}
-function [x, it] = grad_min(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax)
+function [xk, it] = GM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax)
     it = 0;
     pp = p;
+    xk = [x];
     dfk = df(x);
     while norm(dfk) > tol & it < itmax
         d = - df(x);
@@ -28,6 +29,7 @@ function [x, it] = grad_min(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax)
             p = 1.1*p;
         else
             x = x + a*d;
+            xk = [xk x];
             it = it + 1;
             p = pp;
             dfk = df(x);

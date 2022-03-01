@@ -16,14 +16,15 @@ Output:
     - xk: Punt que fa 0 df.
     - it: nombre d'iteracions usades
 %}
-function [xk,it]=Newton(xk, f, df, d2f, amin, amax, p, c1, c2, iW, tol,itmax)
+function [x,it]=Newton(xk, f, df, d2f, amin, amax, p, c1, c2, iW, tol,itmax)
     it=0;
+    x = [xk];
     dfk = df(xk);
     while norm(dfk)>tol & it<itmax
         d = -dfk/d2f(xk);
         a = BLS(xk, f, df, d, amin, amax, p, c1, c2, iW);
-        fprintf('it = %d, xk = %d, dk = %d, ak = %d \n', it, xk, d, a);
         xk=xk+a*d;
+        x = [x xk];
         dfk = df(xk);
         it=it+1;
     end    
