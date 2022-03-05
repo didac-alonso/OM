@@ -16,29 +16,43 @@ Output:
     - x: Punt que fa 0 df.
     - it: nombre d'iteracions usades
 %}
-function [xk, dk, ak, iWk, it] = GM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax)
+function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax, isd, icd, irc, nu)
     it = 0;
     pp = p;
     xk = [x];
-    dk = [];
+    Bk = [];
     dfxk = df(x);
+    dk = [-dfxk];
+    d = -dfxk;
     ak = [];
     iWk = [];
     while norm(dfxk) > tol & it < itmax
-        d = - dfxk;
         [a, iWout] = BLS(x,f,df,d,amin,amax, p, c1, c2, iW);
         iWk = [iWk iWout];
         ak = [ak a];
+        x = x + a*d;
+        xk = [xk x]; 
+
+        if isd == 2
+            if icd == 1
+               B  
+            end
+            B = 
+        end
+        dfxk = -df(x);
+        if isc == 1 | restart == nu
+            d = -dfxk;
+        else
+            B = CGM(dfk, )
+        end
+        %{
+        
         % Si no troba alpha, cal fer més exhaustiva la cerca
         if iWout < 2
             p = 1.1*p;
-        else
-            x = x + a*d;
-            xk = [xk x];
-            it = it + 1;
-            p = pp;
-            dfxk = df(x);
-            dk = [dk d];
-        end
+        %}
+        it = it + 1;
+        dfxk = df(x);
     end
+
 end
