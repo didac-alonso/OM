@@ -17,14 +17,14 @@ Output:
     - it: nombre d'iteracions usades
 %}
 function [xk, dk, ak, iWk, it] = GM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax)
-    it = 0;
+    it = 1;
     pp = p;
     xk = [x];
     dk = [];
     dfxk = df(x);
     ak = [];
     iWk = [];
-    while norm(dfxk) > tol & it < itmax
+    while norm(dfxk) > tol & it <= itmax
         d = - dfxk;
         [a, iWout] = BLS(x,f,df,d,amin,amax, p, c1, c2, iW);
         iWk = [iWk iWout];

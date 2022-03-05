@@ -17,10 +17,10 @@ Output:
     - it: nombre d'iteracions usades
 %}
 function [x,it]=Newton(xk, f, df, d2f, amin, amax, p, c1, c2, iW, tol,itmax)
-    it=0;
+    it=1;
     x = [xk];
     dfk = df(xk);
-    while norm(dfk)>tol & it<itmax
+    while norm(dfk)>tol & it<=itmax
         d = -dfk/d2f(xk);
         a = BLS(xk, f, df, d, amin, amax, p, c1, c2, iW);
         xk=xk+a*d;

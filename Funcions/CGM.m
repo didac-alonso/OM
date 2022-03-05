@@ -20,9 +20,9 @@ Output:
     - it: nombre d'iteracions usades
 %}
 function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax, icg, irc, nu)
-    it = 0;
+    it = 1;
     xk = [x];
-    Bk = [];
+    Bk = [0];
     dfx = df(x);
     dk = [-dfx];
     d = -dfx;
@@ -30,15 +30,12 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
     iWk = [];
     restart = 0;
     if irc == 0
-        nu = Inf
+        nu = Inf;
     end
-    while norm(dfx) > tol & it < itmax
+    while norm(dfx) > tol & it <= itmax
         [a, iWout] = BLS(x,f,df,d,amin,amax, p, c1, c2, iW);
         iWk = [iWk iWout];
         ak = [ak a];
-        if iWout < 2
-            fprintf('%d\n',it)
-        end
         x = x + a*d;
         xk = [xk x];
         dfx1 = dfx; % df k-1
@@ -49,6 +46,7 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
             B = 0;
         elseif irc == 2 & abs(dfx'*dfx1)/(norm(dfx))^2 >= nu
             B = 0;
+            fprintf('%d\n',it)
         elseif icg == 1
             B = (dfx'*dfx)/(norm(dfx1))^2;
         else
