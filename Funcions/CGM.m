@@ -19,7 +19,7 @@ Output:
     - x: Punt que fa 0 df.
     - it: nombre d'iteracions usades
 %}
-function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax, icg, irc, nu)
+function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax, icg, irc, nu, Q)
     it = 1;
     xk = [x];
     Bk = [0];
@@ -33,7 +33,7 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
         nu = Inf;
     end
     while norm(dfx) > tol & it <= itmax
-        [a, iWout] = BLS(x,f,df,d,amin,amax, p, c1, c2, iW);
+        [a, iWout] = BLS(x,f,df,d,amin,amax, p, c1, c2, iW, Q);
         iWk = [iWk iWout];
         ak = [ak a];
         x = x + a*d;

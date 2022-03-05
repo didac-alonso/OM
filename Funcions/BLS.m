@@ -12,16 +12,20 @@ Output:
     - ak: alpha òptima
     -iWout: indicador de les condicions que compleix ak
 %}
-function [a, iWout] = BLS(x, f, df, d, amin, amax, p, c1, c2, iW)
-    a = amax;
-    iWout = 0;
-    [b, iWout] = WolfeC(x, a, f, df, d, c1, c2, iW);
-    while a >= amin & ~b
-        a = p*a;
+function [a, iWout] = BLS(x, f, df, d, amin, amax, p, c1, c2, iW, Q)
+    if iW == 0
+       a = -(df(x)'*d)/(d'*Q*d);
+       iWout = 0;
+    else
+        a = amax;
+        iWout = 0;
         [b, iWout] = WolfeC(x, a, f, df, d, c1, c2, iW);
+        while a >= amin & ~b
+            a = p*a;
+            [b, iWout] = WolfeC(x, a, f, df, d, c1, c2, iW);
+        end
+        if iWout < 2
+            fprintf('No solution found, iWout = %d\n', iWout);
+        end
     end
-    if iWout < 2
-        fprintf('No solution found, iWout = %d\n', iWout);
-    end
-
 end

@@ -13,12 +13,22 @@ Output:
     - it: Nombre d'iteracions usades
 %}
 
-function [x, it] = quadr_min_exact(x, df, Q, b, tol, itmax)
-    it = 0;    
-    while norm(df(x)) > tol & it < itmax
-        d = -df(x);
-        a = -((Q*x-b)'*d)/(d'*Q*d);
+function [xk, dk, ak, iWk, it] = GM_ELS(x, df, Q, tol, itmax)
+    it = 1;  
+    dfx = df(x);
+    d = -dfx;
+    dk = [d];
+    xk = [x];
+    ak = [];
+    while norm(dfx) > tol & it <= itmax
+        a = -(dfx'*d)/(d'*Q*d);
+        ak = [ak a];
         x = x + a*d;
+        xk = [xk x];
+        dfx = df(x);
+        d = -dfx;
+        dk = [d dk];
         it = it + 1;
     end
+    iWk = zeros(it, 1);
 end
