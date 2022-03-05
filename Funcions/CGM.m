@@ -46,7 +46,6 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
             B = 0;
         elseif irc == 2 & abs(dfx'*dfx1)/(norm(dfx))^2 >= nu
             B = 0;
-            fprintf('%d\n',it)
         elseif icg == 1
             B = (dfx'*dfx)/(norm(dfx1))^2;
         else
