@@ -34,6 +34,5 @@ function [xk, dk, ak, iWk, it] = GM(x, f, df, amin, amax, p, c1, c2, iW, tol, it
         dfx = df(x);
         d = - dfx;
         dk = [dk d];
-        %end
     end
 end
