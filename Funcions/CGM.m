@@ -48,7 +48,7 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
             B = 0;
         elseif icg == 1
             B = (dfx'*dfx)/(norm(dfx1))^2;
-        else
+        elseif icg == 2
             B = max(0, (dfx'*(dfx-dfx1))/(norm(dfx1))^2);   
         end
         Bk = [Bk B];
