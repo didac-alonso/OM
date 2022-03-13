@@ -1,5 +1,3 @@
-% Imprimeix la informació estandar per veure la info de les iteracions a de
-% un mètode.
 function [gk,la1k,kappak,rk,Mk] = uo_solve_log(x1,f,g,h,epsG,kmax,almax,almin,rho,c1,c2,iW,isd,icg,irc,nu,delta,xk,dk,alk,iWk,betak,Hk,tauk,xo,xylim,logfreq)
 diary ('uo_solve_log.out'); diary on;
 niter = size(xk,2); n= size(x1,1); nxo = size(xo,1);
@@ -36,50 +34,63 @@ fprintf('   f= %s\n', func2str(f));
 fprintf('   epsG= %3.1e, kmax= %4d\n', epsG,kmax);
 if isd ~= 4 fprintf('   almax= %2d, almin= %3.1e, rho= %4.2f, c1= %3.2f, c2= %3.2f, iW= %1d\n',almax,almin,rho,c1,c2,iW); end
 fprintf('   isd= %1d\n',isd);
-if isd == 2 fprintf('   icg= %1d, irc= %1d, nu= %3.1f\n',icg,irc,nu); end
+if isd == 2 fprintf('   icg= %1d, irc= %1d, nu= %3.2f\n',icg,irc,nu); end
 if isd == 5 fprintf('   delta= %3.1d\n',delta); end
-if n==2 fprintf('   x1 = [ %+3.1e , %+3.1e ]\n', x1(1), x1(2)); end
-if isd ==1
-    fprintf('      k     g''*d       al iW    ||g||        f        r        M\n');
-elseif isd ==2
-    fprintf('      k     g''*d       al iW     beta    ||g||        f        r        M\n');
-elseif isd == 3
-    fprintf('      k     g''*d       al iW    la(1)    kappa    ||g||        f        r        M\n');   
+if isd < 4
+    fprintf('   ek = fk-f*\n');
 else
-    fprintf('      k     g''*d       al iW    la(1) del./tau    kappa    ||g||        f        r        M\n');   
+    fprintf('   ek = ||gk||\n');
 end
-for k = [1:logfreq:niter-1,niter-1]
+    if n==2 fprintf('   x1 = [ %+3.1e , %+3.1e ]\n', x1(1), x1(2)); end
+if isd ==1
+    fprintf('      k     g''*d        al iW    ||g||        f         r        M\n');
+elseif isd ==2
+    fprintf('      k     g''*d        al iW     beta    ||g||        f         r        M\n');
+elseif isd == 3
+    fprintf('      k     g''*d        al iW    la(1)    kappa    ||g||        f         r        M\n');   
+else
+    fprintf('      k     g''*d        al iW    la(1) del./tau    kappa    ||g||        f         r        M\n');   
+end
+if niter == 1
+    krange=[0];
+else if niter == 2
+        krange =[1];
+else
+        krange=[1:logfreq:max(2,niter-11),max(3,niter-10):niter-1];
+end
+for k = krange
+%for k = [1:logfreq:max(2,niter-11),max(3,niter-10):niter-1]
     if isd == 1 
-        fprintf(' %6d %+3.1e %+3.1e  %1d %+3.1e %+3.1e %+3.1e %+3.1e\n', k, gdk(k), alk(k), iWk(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));
+        fprintf(' %6d %+3.1e %+3.2e  %1d %+3.1e %+3.1e %+3.2e %+3.1e\n', k, gdk(k), alk(k), iWk(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));
     elseif isd == 2
-        fprintf(' %6d %+3.1e %+3.1e  %1d %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e\n', k, gdk(k), alk(k), iWk(k),  betak(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));
+        fprintf(' %6d %+3.1e %+3.2e  %1d %+3.1e %+3.1e %+3.1e %+3.2e %+3.1e\n', k, gdk(k), alk(k), iWk(k),  betak(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));
     elseif isd == 3
-        fprintf(' %6d %+3.1e %+3.1e  %1d %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e\n', k, gdk(k), alk(k), iWk(k), la1k(k), kappak(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));      
+        fprintf(' %6d %+3.1e %+3.2e  %1d %+3.1e %+3.1e %+3.1e %+3.1e %+3.2e %+3.1e\n', k, gdk(k), alk(k), iWk(k), la1k(k), kappak(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));      
     else        
-        fprintf(' %6d %+3.1e %+3.1e  %1d %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e\n', k, gdk(k), alk(k), iWk(k), la1k(k), tauk(k), kappak(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));      
+        fprintf(' %6d %+3.1e %+3.2e  %1d %+3.1e %+3.1e %+3.1e %+3.1e %+3.1e %+3.2e %+3.1e\n', k, gdk(k), alk(k), iWk(k), la1k(k), tauk(k), kappak(k), norm(gk(:,k)), fk(k), rk(k),Mk(k));      
     end
 end
 if isd == 1
 %    fprintf('      *                      %+3.1e %+3.1e\n', norm(gk(:,niter)), fk(niter));
-    fprintf(' %6d                      %+3.1e %+3.1e\n', niter, norm(gk(:,niter)), fk(niter));
-    fprintf('      k     g''*d       al iW    ||g||        f        r        M\n');
+    fprintf(' %6d                       %+3.1e %+3.1e\n', niter, norm(gk(:,niter)), fk(niter));
+    fprintf('      k     g''*d        al iW    ||g||        f         r        M\n');
 elseif isd ==2
 %    fprintf('      *                               %+3.1e %+3.1e\n', norm(gk(:,niter)), fk(niter));
-    fprintf(' %6d                               %+3.1e %+3.1e\n', niter, norm(gk(:,niter)), fk(niter));
-    fprintf('      k     g''*d       al iW     beta    ||g||        f        r        M\n');
+    fprintf(' %6d                                %+3.1e %+3.1e\n', niter, norm(gk(:,niter)), fk(niter));
+    fprintf('      k     g''*d        al iW     beta    ||g||        f         r        M\n');
 elseif isd == 3
 %    fprintf('      *                                        %+3.1e %+3.1e\n', norm(gk(:,niter)), fk(niter));
-    fprintf(' %6d                                        %+3.1e %+3.1e\n', niter, norm(gk(:,niter)), fk(niter));
-    fprintf('      k     g''*d       al iW    la(1)    kappa    ||g||        f        r        M\n');
+    fprintf(' %6d                                         %+3.1e %+3.1e\n', niter, norm(gk(:,niter)), fk(niter));
+    fprintf('      k     g''*d        al iW    la(1)    kappa    ||g||        f         r        M\n');
 else
 %    fprintf('      *                      %+3.1e                   %+3.1e %+3.1e\n', la1k(niter), norm(gk(:,niter)), fk(niter));
-    fprintf(' %6d                      %+3.1e                   %+3.1e %+3.1e\n', niter, la1k(niter), norm(gk(:,niter)), fk(niter));
-    fprintf('      k     g''*d       al iW    la(1) del./tau    kappa    ||g||        f        r        M\n');
+    fprintf(' %6d                       %+3.1e                   %+3.1e %+3.1e\n', niter, la1k(niter), norm(gk(:,niter)), fk(niter));
+    fprintf('      k     g''*d        al iW    la(1) del./tau    kappa    ||g||        f         r        M\n');
 end
 
 if n==2
     if isd==1 & size(h(xk(:,niter)),1)>0
-        fprintf('   x* = [ %+3.1e , %+3.1e ]; rUB = %+3.1e \n', xk(1,niter), xk(2,niter),(max(eig(h(xk(:,niter))))-min(eig(h(xk(:,niter)))))^2/(max(eig(h(xk(:,niter))))+min(eig(h(xk(:,niter)))))^2);
+        fprintf('   x* = [ %+3.1e , %+3.1e ]; rUB = %+3.2e \n', xk(1,niter), xk(2,niter),(max(eig(h(xk(:,niter))))-min(eig(h(xk(:,niter)))))^2/(max(eig(h(xk(:,niter))))+min(eig(h(xk(:,niter)))))^2);
     else fprintf('   x* = [ %+3.1e , %+3.1e ]\n', xk(1,niter), xk(2,niter));
     end
 end
