@@ -20,7 +20,7 @@ Output:
     - it: nombre d'iteracions usades
 %}
 function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, tol, itmax, icg, irc, nu, Q)
-    it = 1;
+    it = 0;
     xk = [x];
     Bk = [0];
     dfx = df(x);
@@ -50,4 +50,5 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
         dk = [dk d];
         it = it + 1;
     end
+    it = it+1;
 end

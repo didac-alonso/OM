@@ -13,8 +13,10 @@ function [xk, dk, alk, iWk, betak, Hk, tauk, it] = solver(x, f, g, h,epsG, kmax,
     elseif isd == 3
         [xk, dk, alk, Hk, iWk, it] = BFGS(x, f, g, almin, almax, rho, c1, c2, iW, epsG, kmax, h(zeros(size(x,1))));
     elseif isd == 4
-        
-        
+        [xk, dk, alk, Hk, iWk, it] = Newton(x, f, g, h, almin, almax, rho, c1, c2, iW, epsG,kmax);
+    elseif isd == 5
+        [xk, dk, alk, Hk, iWk, it] = MNM_SD(x, f, g, h, almin, almax, rho, c1, c2, iW, epsG,kmax, delta);
+    elseif isd == 6
+        [xk, dk, alk, Hk, iWk, tauk, it]= MNM_CMI(x, f, g, h, almin, almax, rho, c1, c2, iW, epsG,kmax);
     end
-    
 end

@@ -41,7 +41,7 @@ if isd < 4
 else
     fprintf('   ek = ||gk||\n');
 end
-    if n==2 fprintf('   x1 = [ %+3.1e , %+3.1e ]\n', x1(1), x1(2)); end
+    if n==2 fprintf('   x1 = [ %+3.1e , %+3.1e ]. It k: x(k+1) <- xk+alk*dk\n', x1(1), x1(2)); end
 if isd ==1
     fprintf('      k     g''*d        al iW    ||g||        f         r        M\n');
 elseif isd ==2
@@ -52,8 +52,8 @@ else
     fprintf('      k     g''*d        al iW    la(1) del./tau    kappa    ||g||        f         r        M\n');   
 end
 if niter == 1
-    krange=[0];
-else if niter == 2
+    krange=[];
+elseif niter == 2
         krange =[1];
 else
         krange=[1:logfreq:max(2,niter-11),max(3,niter-10):niter-1];
@@ -97,7 +97,7 @@ end
 fprintf('   [uo_solve_log]\n');
 fs = 0;
 iplot = 1;
-if iplot == 1
+if iplot == 1 & niter > 1
     if n == 2
         if size(xylim) == [0 0] xylim = [0 0 0 0]; end
         subplot(2,2,1); uo_solve_plot(f, xk, gk, xylim, 1, fs); subplot(2,2,2); uo_solve_plot(f, xk, gk, xylim, 2,fs);
