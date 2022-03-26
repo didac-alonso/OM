@@ -28,10 +28,6 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
     d = -dfx;
     ak = [];
     iWk = [];
-    restart = 0;
-    if irc == 0
-        nu = Inf;
-    end
     while norm(dfx) > tol & it <= itmax
         [a, iWout] = BLS(x,f,df,d,amin,amax, p, c1, c2, iW, Q);
         iWk = [iWk iWout];
@@ -40,9 +36,7 @@ function [xk, dk, ak, Bk, iWk, it] = CGM(x, f, df, amin, amax, p, c1, c2, iW, to
         xk = [xk x];
         dfx1 = dfx; % df k-1
         dfx = df(x); % df k
-        restart = restart + irc == 1;
-        if irc == 1 & restart == nu
-            restart = 0;
+        if irc == 1 & mod(it,length(x)) == 0
             B = 0;
         elseif irc == 2 & abs(dfx'*dfx1)/(norm(dfx))^2 >= nu
             B = 0;
