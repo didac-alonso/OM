@@ -1,0 +1,1 @@
+function [xk, dk, ak, Hk iWk, it]=MNM 

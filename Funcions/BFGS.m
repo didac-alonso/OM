@@ -1,4 +1,4 @@
-function [xk, dk, ak, Hk iWk, it] = BFGS(x, f, df, amin, amax, rho, c1, c2, iW, tol, itmax, Q)
+function [xk, dk, ak, Hk, tauk, iWk, it] = BFGS(x, f, df, amin, amax, rho, c1, c2, iW, tol, itmax, Q)
     I = eye(size(x,1));
     H = I;
     Hk = [H];
@@ -11,7 +11,7 @@ function [xk, dk, ak, Hk iWk, it] = BFGS(x, f, df, amin, amax, rho, c1, c2, iW, 
     while norm(dfx) > tol & it <= itmax
         d = -H*dfx;
         dk = [dk d];
-        [a, iWout] = BLS(x, f, df, d, amin, amax, rho, c1, c2, iW, Q);
+        [a, iWout] = BLS(x, f, df, d, amin, amax, rho, c1, c2, iW, Q); 
         ak = [ak a];
         iWk = [iWk iWout];
         x = x+a*d;
